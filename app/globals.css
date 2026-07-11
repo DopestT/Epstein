@@ -1,26 +1,106 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #f4f4f2;
+  --surface: #ffffff;
+  --surface-2: #f0f0ee;
+  --border: #e0e0de;
+  --text-1: #1a1a1a;
+  --text-2: #444444;
+  --text-3: #888888;
+  --red: #e8302a;
+  --red-dim: #c42520;
+  --green: #2a9d2a;
+  --orange: #ff6b35;
+  --blue: #1a4a8a;
+  --gold: #8a5e0a;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+a {
+  color: inherit;
+  text-decoration: none;
 }
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  transition: background 0.15s, opacity 0.15s;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--red);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--red-dim);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text-1);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--surface-2);
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.tag-live {
+  background: #e8f5e9;
+  color: var(--green);
+}
+
+.tag-daily {
+  background: #e3f2fd;
+  color: var(--blue);
+}
+
+.badge-truth { color: var(--orange); }
+.badge-wh { color: var(--blue); }
+.badge-yt { color: var(--red); }
+.badge-news { color: var(--gold); }
