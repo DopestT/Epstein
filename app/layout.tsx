@@ -27,13 +27,13 @@ export default function RootLayout({
         <Nav />
         <main>{children}</main>
         <Footer />
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6678675739964402"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </body>
-      <Script
-        async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6678675739964402"
-        crossOrigin="anonymous"
-        strategy="beforeInteractive"
-      />
     </html>
   );
 }
