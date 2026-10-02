@@ -14,19 +14,25 @@ TABLE = "analyses"
 PAGE_SIZE = 1000
 
 
-def get_config():
+def get_config(require_write=False):
     url = os.environ.get("SUPABASE_URL") or os.environ.get("NEXT_PUBLIC_SUPABASE_URL")
-    key = (
-        os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+    service_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+    read_key = (
+        service_key
         or os.environ.get("SUPABASE_KEY")
         or os.environ.get("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY")
     )
-    if not url or not key:
+    if not url or not read_key:
         sys.exit(
-            "Missing Supabase config. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY "
-            "(a service-role key is required to write volume data back to analyses.output)."
+            "Missing Supabase config. Set SUPABASE_URL (or NEXT_PUBLIC_SUPABASE_URL) "
+            "and a Supabase key."
         )
-    return url.rstrip("/"), key
+    if require_write and not service_key:
+        sys.exit(
+            "Write mode requires SUPABASE_SERVICE_ROLE_KEY. "
+            "Public/publishable keys are read-only for this script."
+        )
+    return url.rstrip("/"), service_key if require_write else read_key
 
 
 def fetch_analyses(base_url, key, limit):
@@ -111,7 +117,8 @@ def write_volumes(base_url, key, rows, volumes):
             f"{base_url}/rest/v1/{TABLE}?{params}", data=body, headers=headers, method="PATCH"
         )
         try:
-            urllib.request.urlopen(req)
+            with urllib.request.urlopen(req):
+                pass
         except urllib.error.HTTPError as e:
             sys.exit(f"Supabase write failed for run {row['id']}: {e.code} {e.reason} — {e.read().decode(errors='replace')}")
         except urllib.error.URLError as e:
@@ -128,7 +135,10 @@ def main():
     )
     args = parser.parse_args()
 
-    base_url, key = get_config()
+    if args.limit <= 0:
+        parser.error("--limit must be greater than 0")
+
+    base_url, key = get_config(require_write=args.write)
     rows = fetch_analyses(base_url, key, args.limit)
 
     if not rows:
